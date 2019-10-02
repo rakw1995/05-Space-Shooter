@@ -20,6 +20,8 @@ HIT_SCORE = 10
 KILL_SCORE = 100
 MOVEMENT_SPEED = 3
 
+
+
 class Bullet(arcade.Sprite):
     def __init__(self, position, velocity, damage):
         ''' 
@@ -28,7 +30,7 @@ class Bullet(arcade.Sprite):
             velocity: (dx, dy) tuple
             damage: int (or float)
         '''
-        super().__init__("assets/bullet.png", 0.5)
+        super().__init__("assets/laser.png", 0.5)
         (self.center_x, self.center_y) = position
         (self.dx, self.dy) = velocity
         self.damage = damage
@@ -44,12 +46,12 @@ class Bullet(arcade.Sprite):
     
 class Player(arcade.Sprite):
     def __init__(self):
-        super().__init__("assets/spaceship.png", 0.5)
+        super().__init__("assets/spaceship.png", 1.0)
         (self.center_x, self.center_y) = STARTING_LOCATION
 
 class Enemy(arcade.Sprite):
     def __init__(self, position):
-        super().__init__("assets/hjm-random_asteroids-v3/1.png", 0.5)
+        super().__init__("assets/asteroid.png", 0.05)
         self.hp = ENEMY_HP
         (self.center_x, self.center_y) = position
 
@@ -80,11 +82,29 @@ class Window(arcade.Window):
             self.enemy_list.append(enemy)     
 
     def update(self, delta_time):
-        pass
+        self.bullet_list.update()
+        for e in self.enemy_list:
+           
+            collisions = arcade.check_for_collision_with_list(e,self.bullet_list)
+            if collisions:
+                self.score = self.score + HIT_SCORE
+                e.hp = e.hp - BULLET_DAMAGE
+                for b in self.bullet_list:
+                    if collisions:
+                        b.kill()
+                
+                if e.hp == 0:
+                    e.kill()
+
+
 
     def on_draw(self):
         """ Called whenever we need to draw the window. """
         arcade.start_render()
+        arcade.draw_text(str(self.score), 20, SCREEN_HEIGHT - 40, open_color.white, 16)
+        self.player.draw()
+        self.bullet_list.draw()
+        self.enemy_list.draw()
 
 
 
@@ -131,6 +151,7 @@ class Window(arcade.Window):
 
 def main():
     window = Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+    window.setup()
     arcade.run()
 
 
