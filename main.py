@@ -71,6 +71,7 @@ class Window(arcade.Window):
         self.score = 0
 
         arcade.set_background_color(open_color.black)
+        self.background = arcade.load_texture("assets/bg.png")
 
 
 
@@ -90,8 +91,7 @@ class Window(arcade.Window):
                 self.score = self.score + HIT_SCORE
                 e.hp = e.hp - BULLET_DAMAGE
                 for b in self.bullet_list:
-                    if collisions:
-                        b.kill()
+                    b.kill()
                 
                 if e.hp == 0:
                     e.kill()
@@ -101,10 +101,12 @@ class Window(arcade.Window):
     def on_draw(self):
         """ Called whenever we need to draw the window. """
         arcade.start_render()
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
         arcade.draw_text(str(self.score), 20, SCREEN_HEIGHT - 40, open_color.white, 16)
         self.player.draw()
         self.bullet_list.draw()
         self.enemy_list.draw()
+       
 
 
 
@@ -147,12 +149,17 @@ class Window(arcade.Window):
             self.player.change_x = 0
         if key == arcade.key.UP or key == arcade.key.DOWN:
             self.player.change_y = 0
+    
+
 
 
 def main():
     window = Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     window.setup()
     arcade.run()
+    
+
+
 
 
 if __name__ == "__main__":
