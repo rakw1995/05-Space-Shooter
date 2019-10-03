@@ -1,4 +1,4 @@
-import sys, logging, open_color, arcade, os, random
+import sys, logging, open_color, arcade, os, random, time
 
 #check to make sure we are running the right version of Python
 version = (3,7)
@@ -95,6 +95,12 @@ class Window(arcade.Window):
                 
                 if e.hp == 0:
                     e.kill()
+                
+                if self.score == 500:
+
+                    
+                    time.sleep(2)
+                    sys.exit()
 
 
 
@@ -106,6 +112,7 @@ class Window(arcade.Window):
         self.player.draw()
         self.bullet_list.draw()
         self.enemy_list.draw()
+
        
 
 
@@ -152,12 +159,19 @@ class Window(arcade.Window):
     
 
 
+    
+
+
 
 def main():
     window = Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     window.setup()
     arcade.run()
-    
+    player = Window()
+    while True:
+        if player.score == 500:
+            sys.exit()
+
 
 
 
